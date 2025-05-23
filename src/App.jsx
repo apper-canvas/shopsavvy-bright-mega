@@ -13,6 +13,10 @@ import Tracking from './pages/Tracking'
 import ProductDetail from './pages/ProductDetail'
 import NotFound from './pages/NotFound'
 import Wishlist from './pages/Wishlist'
+import HelpCenter from './pages/HelpCenter'
+import ShippingInfo from './pages/ShippingInfo'
+import Returns from './pages/Returns'
+import ContactUs from './pages/ContactUs'
 
 function App() {
   return (
@@ -31,6 +35,10 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/tracking" element={<Tracking />} />
               <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/help" element={<HelpCenter />} />
+              <Route path="/shipping" element={<ShippingInfo />} />
+              <Route path="/returns" element={<Returns />} />
+              <Route path="/contact" element={<ContactUs />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             </div>

@@ -5,6 +5,7 @@ import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
 import Header from '../components/Header'
 import Categories from '../components/Categories'
+import Footer from '../components/Footer'
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false)
@@ -176,65 +177,7 @@ const Home = () => {
       {/* Main Feature Section */}
       <MainFeature />
 
-      {/* Footer */}
-      <footer className="bg-surface-900 dark:bg-surface-950 text-surface-300 py-12 mt-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500">
-                  <ApperIcon name="ShoppingBag" className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white">ShopSavvy</h3>
-              </div>
-              <p className="text-surface-400">
-                Your smart shopping companion for discovering amazing products and deals.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Shop</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-primary-400 transition-colors">All Products</a></li>
-                <li><a href="#" className="hover:text-primary-400 transition-colors">Categories</a></li>
-                <li><a href="#" className="hover:text-primary-400 transition-colors">Deals</a></li>
-                <li><a href="#" className="hover:text-primary-400 transition-colors">New Arrivals</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Support</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-primary-400 transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-primary-400 transition-colors">Shipping Info</a></li>
-                <li><a href="#" className="hover:text-primary-400 transition-colors">Returns</a></li>
-                <li><a href="#" className="hover:text-primary-400 transition-colors">Contact Us</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Connect</h4>
-              <div className="flex space-x-4">
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-800 hover:bg-primary-600 transition-colors">
-                  <ApperIcon name="Facebook" className="h-5 w-5" />
-                </a>
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-800 hover:bg-primary-600 transition-colors">
-                  <ApperIcon name="Twitter" className="h-5 w-5" />
-                </a>
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-800 hover:bg-primary-600 transition-colors">
-                  <ApperIcon name="Instagram" className="h-5 w-5" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-surface-800 mt-8 pt-8 text-center">
-            <p className="text-surface-400">
-              © 2024 ShopSavvy. All rights reserved. Made with ❤️ for smart shoppers.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
