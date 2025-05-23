@@ -176,8 +176,8 @@ export const CartProvider = ({ children }) => {
       setLoading(false)
     }
   }
-
-  const getTotalItems = () => cart.items.reduce((sum, item) => sum + (item.quantity || 0), 0)
+  const getTotalItems = () => Array.isArray(cart?.items) ? cart.items.reduce((sum, item) => sum + (item?.quantity || 0), 0) : 0
+  const getTotalPrice = () => Array.isArray(cart?.items) ? cart.items.reduce((sum, item) => sum + ((item?.price || 0) * (item?.quantity || 0)), 0) : 0
   const getTotalPrice = () => cart.items.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
 
   return (
