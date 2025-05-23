@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ApperIcon from '../components/ApperIcon'
 import { useProducts } from '../contexts/ProductsContext'
+import { useCart } from '../contexts/CartContext'
 import toast from 'react-hot-toast'
 
 const CategoryView = () => {
@@ -12,7 +13,8 @@ const CategoryView = () => {
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState('name')
   const [filterBy, setFilterBy] = useState('all')
-  const { addToCart } = useProducts()
+  const { products: contextProducts } = useProducts()
+  const { addToCart } = useCart()
 
   const categories = {
     1: { name: 'Electronics', icon: 'Smartphone', color: 'from-blue-500 to-cyan-500' },
