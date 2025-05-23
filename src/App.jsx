@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Home from './pages/Home'
+import Categories from './pages/Categories'
+import CategoryView from './pages/CategoryView'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -10,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/category/:categoryId" element={<CategoryView />} />
       </Routes>
       
       <ToastContainer

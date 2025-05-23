@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
+import Categories from '../components/Categories'
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false)
@@ -32,7 +33,7 @@ const Home = () => {
 
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-surface-600 hover:text-primary-600 transition-colors font-medium">Products</a>
-            <a href="#" className="text-surface-600 hover:text-primary-600 transition-colors font-medium">Categories</a>
+            <Categories />
             <a href="#" className="text-surface-600 hover:text-primary-600 transition-colors font-medium">Deals</a>
             <a href="#" className="text-surface-600 hover:text-primary-600 transition-colors font-medium">About</a>
           </nav>
