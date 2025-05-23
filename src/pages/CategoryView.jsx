@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ApperIcon from '../components/ApperIcon'
+import { useProducts } from '../contexts/ProductsContext'
+import toast from 'react-hot-toast'
 
 const CategoryView = () => {
   const { categoryId } = useParams()
@@ -10,6 +12,7 @@ const CategoryView = () => {
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState('name')
   const [filterBy, setFilterBy] = useState('all')
+  const { addToCart } = useProducts()
 
   const categories = {
     1: { name: 'Electronics', icon: 'Smartphone', color: 'from-blue-500 to-cyan-500' },
@@ -49,9 +52,16 @@ const CategoryView = () => {
   }, [categoryId])
 
   const handleAddToCart = (product) => {
+    if (!product.inStock) {
+      toast.error('Product is out of stock')
+      return
+    }
+    addToCart(product)
+    toast.success(`${product.name} added to cart`)
   }
 
   const handleProductClick = (product) => {
+    navigate(`/product/${product.id}`)
   }
 
   const sortedProducts = [...products].sort((a, b) => {
