@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
 import Categories from '../components/Categories'
-
+    <main>
+      <Header />
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false)
 
