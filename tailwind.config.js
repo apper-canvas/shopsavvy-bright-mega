@@ -8,6 +8,17 @@ export default {
     extend: {
       colors: {
         primary: {
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+          700: '#6d28d9',
+          800: '#5b21b6',
+          900: '#4c1d95',
+          950: '#2e1065',
           DEFAULT: '#7C3AED',
           light: '#A855F7',
           dark: '#5B21B6'
@@ -30,9 +41,9 @@ export default {
           800: '#1e293b',
           900: '#0f172a'
         }
-    },
-    border: {
-      DEFAULT: 'hsl(var(--border))'
+      },
+      border: {
+        DEFAULT: 'hsl(var(--border))'
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
