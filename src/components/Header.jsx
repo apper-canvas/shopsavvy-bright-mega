@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../contexts/CartContext'
 import { useDeals } from '../contexts/DealsContext'
+import { useTracking } from '../contexts/TrackingContext'
 import ApperIcon from './ApperIcon'
 import Categories from './Categories'
 import CartSidebar from './CartSidebar'
 
 const Header = () => {
   const { getTotalItems } = useCart()
+  const { getPendingShipmentsCount } = useTracking()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const totalItems = getTotalItems()
 
@@ -62,9 +64,34 @@ const Header = () => {
                 Products
               </Link>
               <Categories />
+              
+              <Link 
+                to="/tracking" 
+                className="relative text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium flex items-center space-x-1"
+              >
+                <ApperIcon name="Truck" className="h-4 w-4" />
+                <span>Tracking</span>
+                {getPendingShipmentsCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">
+                    {getPendingShipmentsCount() > 9 ? '9+' : getPendingShipmentsCount()}
+                  </span>
+                )}
+              </Link>
             </nav>
 
-            {/* Cart Button */}
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-3">
+              {/* Mobile Tracking Button */}
+              <Link to="/tracking" className="md:hidden relative">
+                <ApperIcon name="Truck" className="h-6 w-6 text-surface-600 dark:text-surface-400" />
+                {getPendingShipmentsCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">
+                    {getPendingShipmentsCount() > 9 ? '9+' : getPendingShipmentsCount()}
+                  </span>
+                )}
+              </Link>
+
+              {/* Cart Button */}
             <motion.button
               onClick={() => setIsCartOpen(true)}
               className="relative flex items-center space-x-2 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30 px-4 py-2 rounded-xl transition-colors"
@@ -81,6 +108,7 @@ const Header = () => {
                 </span>
               )}
             </motion.button>
+            </div>
           </div>
         </div>
       </header>

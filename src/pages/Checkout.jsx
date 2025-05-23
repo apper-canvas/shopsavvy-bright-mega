@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import Header from '../components/Header'
+import { useTracking } from '../contexts/TrackingContext'
 import ApperIcon from '../components/ApperIcon'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -10,6 +11,7 @@ const Checkout = () => {
   const navigate = useNavigate()
   const { cart, getTotalPrice, clearCart } = useCart()
   const [currentStep, setCurrentStep] = useState(1)
+  const { createOrderTracking } = useTracking()
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderNumber, setOrderNumber] = useState('')
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
@@ -134,8 +136,17 @@ const Checkout = () => {
       
       const orderNum = 'ORD-' + Date.now().toString().slice(-6)
       setOrderNumber(orderNum)
-      setOrderPlaced(true)
-      clearCart()
+      
+      // Create tracking for the order
+      createOrderTracking({
+        orderNumber: orderNum,
+        items: cart.items,
+        shippingMethod,
+        shippingAddress,
+        customerInfo
+      })
+      
+      setOrderPlaced(true)      clearCart()
       
     } catch (error) {
       setPaymentError(error.message || 'Payment processing failed. Please try again.')
@@ -274,6 +285,12 @@ const Checkout = () => {
                 <div className="space-y-3">
                   <button
                     onClick={() => navigate('/products')}
+                  >
+                    Track Your Order
+                  </button>
+                  <button
+                    onClick={() => navigate('/')}
+                    className="w-full px-6 py-3 border border-surface-300 dark:border-surface-600 text-surface-700 dark:text-surface-300 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors font-medium"
                     className="w-full px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
                   >
                     Continue Shopping

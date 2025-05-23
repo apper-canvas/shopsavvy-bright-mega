@@ -16,7 +16,8 @@
     "framer-motion": "^10.16.4",
     "lucide-react": "^0.299.0",
     "date-fns": "^4.1.0",
-    "@stripe/stripe-js": "^2.1.11"
+    "@stripe/stripe-js": "^2.1.11",
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
