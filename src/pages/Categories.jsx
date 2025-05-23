@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import ApperIcon from '../components/ApperIcon'
 
 const Categories = () => {
@@ -24,7 +23,6 @@ const Categories = () => {
   )
 
   const handleCategoryClick = (category) => {
-    toast.success(`Browsing ${category.name} products`)
     navigate(`/category/${category.id}`)
   }
 
