@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
 import { useCart } from '../contexts/CartContext'
 import { useProducts } from '../contexts/ProductsContext'
 import Header from '../components/Header'
@@ -74,12 +73,10 @@ const Products = () => {
     setSearchTerm('')
     setSortBy('relevance')
     setCurrentPage(1)
-    toast.info("Filters cleared!")
   }
 
   const handleAddToCart = (product) => {
     addToCart(product)
-    toast.success(`${product.name} added to cart!`)
   }
 
   return (
