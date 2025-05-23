@@ -12,6 +12,7 @@ import Checkout from './pages/Checkout'
 import Tracking from './pages/Tracking'
 import ProductDetail from './pages/ProductDetail'
 import NotFound from './pages/NotFound'
+import Wishlist from './pages/Wishlist'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/category/:categoryId" element={<CategoryView />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/tracking" element={<Tracking />} />
+              <Route path="/wishlist" element={<Wishlist />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             </div>

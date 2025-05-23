@@ -21,7 +21,7 @@ const Products = () => {
   
   const navigate = useNavigate()
   const { addToCart, getTotalItems } = useCart()
-  const { products, favorites, toggleFavorite } = useProducts()
+  const { products, favorites, toggleFavorite: contextToggleFavorite } = useProducts()
 
   const categories = [
     { id: 'all', name: 'All Products', icon: 'Grid3X3' },
@@ -79,6 +79,10 @@ const Products = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product)
+  }
+
+  const handleFavoriteToggle = (productId) => {
+    contextToggleFavorite(productId)
   }
 
   return (
@@ -332,7 +336,7 @@ const Products = () => {
                             <ApperIcon name="Eye" className="h-5 w-5" />
                           </button>
                           <button
-                            onClick={() => toggleFavorite(product.id)}
+                            onClick={() => handleFavoriteToggle(product.id)}
                             className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
                               favorites.includes(product.id)
                                 ? 'bg-red-500 text-white'
@@ -612,7 +616,7 @@ const Products = () => {
                       {selectedProduct.inStock ? 'Add to Cart' : 'Out of Stock'}
                     </button>
                     <button
-                      onClick={() => toggleFavorite(selectedProduct.id)}
+                      onClick={() => handleFavoriteToggle(selectedProduct.id)}
                       className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                         favorites.includes(selectedProduct.id)
                           ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-900/20 font-medium'

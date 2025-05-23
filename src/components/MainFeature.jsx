@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
+import { useProducts } from '../contexts/ProductsContext'
 import ApperIcon from './ApperIcon'
 
 const MainFeature = () => {
@@ -14,10 +15,11 @@ const MainFeature = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState('grid')
   const [cart, setCart] = useState([])
-  const [favorites, setFavorites] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
 
   const navigate = useNavigate()
+  const { favorites, toggleFavorite: contextToggleFavorite } = useProducts()
+
   // Mock product data
   const [products] = useState([
     {
@@ -158,12 +160,8 @@ const MainFeature = () => {
 
   const { getTotalItems } = useCart()
 
-  const toggleFavorite = (productId) => {
-    if (favorites.includes(productId)) {
-      setFavorites(favorites.filter(id => id !== productId))
-    } else {
-      setFavorites([...favorites, productId])
-    }
+  const handleFavoriteToggle = (productId) => {
+    contextToggleFavorite(productId)
   }
 
   const clearFilters = () => {
@@ -420,7 +418,7 @@ const MainFeature = () => {
                         >
                           <ApperIcon name="Eye" className="h-5 w-5" />
                         </button>
-                        <button
+                          onClick={() => handleFavoriteToggle(product.id)}
                           onClick={() => toggleFavorite(product.id)}
                           className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
                             favorites.includes(product.id)
@@ -700,7 +698,7 @@ const MainFeature = () => {
                       >
                         {selectedProduct.inStock ? 'Add to Cart' : 'Out of Stock'}
                       </button>
-                      <button
+                        onClick={() => handleFavoriteToggle(selectedProduct.id)}
                         onClick={() => toggleFavorite(selectedProduct.id)}
                         className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                           favorites.includes(selectedProduct.id)

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../contexts/CartContext'
 import { useDeals } from '../contexts/DealsContext'
+import { useProducts } from '../contexts/ProductsContext'
 import { useTracking } from '../contexts/TrackingContext'
 import ApperIcon from './ApperIcon'
 import Categories from './Categories'
@@ -11,6 +12,7 @@ import CartSidebar from './CartSidebar'
 const Header = () => {
   const { getTotalItems } = useCart()
   const { getPendingShipmentsCount } = useTracking()
+  const { favorites } = useProducts()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const totalItems = getTotalItems()
 
@@ -82,6 +84,17 @@ const Header = () => {
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
               {/* Mobile Tracking Button */}
+              
+              {/* Wishlist */}
+              <Link
+                to="/wishlist"
+                className="relative p-3 text-surface-600 dark:text-surface-300 hover:text-primary-600 transition-colors"
+              >
+                <ApperIcon name="Heart" className="h-6 w-6" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                  {favorites.length}
+                </span>
+              </Link>
               <Link to="/tracking" className="md:hidden relative">
                 <ApperIcon name="Truck" className="h-6 w-6 text-surface-600 dark:text-surface-400" />
                 {getPendingShipmentsCount() > 0 && (

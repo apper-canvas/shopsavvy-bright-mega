@@ -49,8 +49,6 @@ const ProductDetail = () => {
 
   const handleFavoriteToggle = () => {
     toggleFavorite(product.id)
-    const isFavorite = favorites.includes(product.id)
-    toast.success(isFavorite ? 'Removed from favorites' : 'Added to favorites')
   }
 
   if (loading) {

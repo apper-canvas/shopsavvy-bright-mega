@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { toast } from 'react-hot-toast'
 
 const ProductsContext = createContext()
 
@@ -131,8 +132,10 @@ export const ProductsProvider = ({ children }) => {
   const toggleFavorite = (productId) => {
     if (favorites.includes(productId)) {
       setFavorites(favorites.filter(id => id !== productId))
+      toast.success('Removed from wishlist')
     } else {
       setFavorites([...favorites, productId])
+      toast.success('Added to wishlist')
     }
   }
 
@@ -140,11 +143,16 @@ export const ProductsProvider = ({ children }) => {
     return products.find(product => product.id === parseInt(id))
   }
 
+  const getFavoriteProducts = () => {
+    return products.filter(product => favorites.includes(product.id))
+  }
+
   const value = {
     products,
     favorites,
     toggleFavorite,
-    getProductById
+    getProductById,
+    getFavoriteProducts
   }
 
   return (
