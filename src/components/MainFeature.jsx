@@ -10,6 +10,7 @@ const MainFeature = () => {
   const [selectedBrand, setSelectedBrand] = useState('all')
   const [selectedSize, setSelectedSize] = useState('all')
   const { addToCart } = useCart()
+  const [sortBy, setSortBy] = useState('relevance')
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState('grid')
   const [cart, setCart] = useState([])
@@ -256,8 +257,11 @@ const MainFeature = () => {
                   {getTotalItems()} items
                 </span>
               </div>
-            <div className="bg-white dark:bg-surface-800 rounded-2xl shadow-neu-light dark:shadow-neu-dark p-6 sticky top-24">
-              <div className="flex items-center justify-between mb-6">
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Main Content */}
                 <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
@@ -267,6 +271,9 @@ const MainFeature = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
+            <div className="bg-white dark:bg-surface-800 rounded-2xl shadow-neu-light dark:shadow-neu-dark p-6 sticky top-24">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
                   Filters
                 </h3>
                 <button
