@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
 import { useDeals } from '../contexts/DealsContext'
 import { useCart } from '../contexts/CartContext'
 import Header from '../components/Header'
@@ -28,7 +27,6 @@ const Deals = () => {
       category: deal.category
     }
     addToCart(product)
-    toast.success(`${deal.title} added to cart with ${deal.discountPercentage}% discount!`)
   }
 
   const containerVariants = {
