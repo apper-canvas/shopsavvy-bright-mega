@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
 import ApperIcon from '../components/ApperIcon'
 
 const CategoryView = () => {
@@ -50,11 +49,9 @@ const CategoryView = () => {
   }, [categoryId])
 
   const handleAddToCart = (product) => {
-    toast.success(`${product.name} added to cart!`)
   }
 
   const handleProductClick = (product) => {
-    toast.info(`Viewing ${product.name}`)
   }
 
   const sortedProducts = [...products].sort((a, b) => {
