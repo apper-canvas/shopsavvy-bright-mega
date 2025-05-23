@@ -62,18 +62,6 @@ const Header = () => {
                 Products
               </Link>
               <Categories />
-              <Link 
-                to="/about" 
-                className="text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium"
-              >
-                About
-              </Link>
-              <Link 
-                to="/contact" 
-                className="text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium"
-              >
-                Contact
-              </Link>
             </nav>
 
             {/* Cart Button */}
