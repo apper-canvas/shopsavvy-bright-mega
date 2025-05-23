@@ -1,18 +1,72 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useDeals } from '../contexts/DealsContext'
 import { useCart } from '../contexts/CartContext'
 import Header from '../components/Header'
 import ApperIcon from '../components/ApperIcon'
 import { formatDistanceToNow } from 'date-fns'
+import { fetchDeals } from '../services/dealService'
+import { toast } from 'react-hot-toast'
 
 const Deals = () => {
-  const { filteredDeals, selectedCategory, setSelectedCategory, minDiscount, setMinDiscount, sortBy, setSortBy, filterDeals } = useDeals()
+  const [deals, setDeals] = useState([])
+  const [filteredDeals, setFilteredDeals] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [minDiscount, setMinDiscount] = useState(0)
+  const [sortBy, setSortBy] = useState('featured')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
   const { addToCart } = useCart()
+  
+  // Fetch deals from the API
+  useEffect(() => {
+    const loadDeals = async () => {
+      setIsLoading(true)
+      try {
+        const dealsData = await fetchDeals()
+        setDeals(dealsData || [])
+      } catch (error) {
+        setError(error.message || 'Failed to load deals')
+        toast.error('Error loading deals. Please try again.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    loadDeals()
+  }, [])
 
   useEffect(() => {
-    filterDeals(selectedCategory, minDiscount)
-  }, [selectedCategory, minDiscount, sortBy])
+    // Filter and sort deals
+    const filterDeals = () => {
+      let filtered = [...(deals || [])]
+      
+      // Apply category filter
+      if (selectedCategory !== 'All') {
+        filtered = filtered.filter(deal => deal.category === selectedCategory)
+      }
+      
+      // Apply minimum discount filter
+      if (minDiscount > 0) {
+        filtered = filtered.filter(deal => deal.discountPercentage >= minDiscount)
+      }
+      
+      // Apply sorting
+      filtered.sort((a, b) => {
+        if (sortBy === 'featured') {
+          return b.featured - a.featured
+        } else if (sortBy === 'discount') {
+          return b.discountPercentage - a.discountPercentage
+        } else if (sortBy === 'price') {
+          return a.discountedPrice - b.discountedPrice
+        }
+        return 0
+      })
+      
+      setFilteredDeals(filtered)
+    }
+    
+    filterDeals()
+  }, [deals, selectedCategory, minDiscount, sortBy])
 
   const categories = ['All', 'Electronics', 'Fashion', 'Beauty', 'Home']
   const discountOptions = [0, 20, 30, 40, 50]
@@ -120,20 +174,45 @@ const Deals = () => {
             {/* Results Count */}
             <div className="flex items-end">
               <div className="text-sm text-surface-600 dark:text-surface-400">
-                {filteredDeals.length} deals found
+                {isLoading ? 'Loading...' : `${filteredDeals?.length || 0} deals found`}
               </div>
             </div>
           </div>
         </motion.div>
 
         {/* Deals Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {filteredDeals.map(deal => (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary-600"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+            <ApperIcon name="AlertCircle" className="h-12 w-12 mx-auto text-red-500 mb-4" />
+            <h3 className="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">
+              Failed to Load Deals
+            </h3>
+            <p className="text-red-600 dark:text-red-300 mb-4">
+              {error}
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : filteredDeals?.length === 0 ? (
+          <div className="bg-surface-50 dark:bg-surface-800 rounded-lg p-8 text-center">
+            <p className="text-surface-600 dark:text-surface-400">No deals found matching your filters. Try adjusting your criteria.</p>
+          </div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {filteredDeals.map(deal => (
             <motion.div
               key={deal.id}
               variants={itemVariants}
@@ -180,8 +259,9 @@ const Deals = () => {
                 </motion.button>
               </div>
             </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
   )
