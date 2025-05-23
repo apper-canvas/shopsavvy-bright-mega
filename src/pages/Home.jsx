@@ -7,8 +7,6 @@ import Categories from '../components/Categories'
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false)
-        <Header />
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
     document.documentElement.classList.toggle('dark')
