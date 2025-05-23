@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
 import Header from '../components/Header'
@@ -84,9 +85,9 @@ const Home = () => {
                 >
                   Start Shopping
                 </Link>
-                <button className="px-8 py-3 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-100 font-semibold rounded-xl border-2 border-surface-200 dark:border-surface-700 hover:border-primary-300 dark:hover:border-primary-600 transition-all duration-300">
+            <Link to="/categories" className="group relative overflow-hidden rounded-xl bg-secondary px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-secondary-dark hover:shadow-xl inline-block text-center">
                   Browse Categories
-                </button>
+            </Link>
               </div>
             </motion.div>
 
