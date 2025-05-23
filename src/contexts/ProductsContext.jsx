@@ -42,38 +42,43 @@ export const ProductsProvider = ({ children }) => {
       setFavorites(favorites.filter(id => id !== productId))
       toast.success('Removed from wishlist')
     } else {
-      setFavorites([...favorites, productId])
-  const getProductByIdFromApi = async (id) => {
-    try {
-      setLoading(true)
-      const product = await getProductById(id)
-      return product
-    } catch (error) {
-      console.error(`Error getting product with ID ${id}:`, error)
-      toast.error("Failed to load product details")
-      return null
-    } finally {
-      setLoading(false)
+      setFavorites([...favorites, productId]);
+      toast.success('Added to wishlist');
     }
   }
 
-  const getProductById = (id) => {
-    return products.find(product => product.id === parseInt(id))
+  const getProductByIdFromApi = async (id) => {
+    try {
+      setLoading(true);
+      const product = await getProductById(id);
+      return product;
+    } catch (error) {
+      console.error(`Error getting product with ID ${id}:`, error);
+      toast.error("Failed to load product details");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const getProductByIdLocal = (id) => {
+    return products.find(product => product.id === parseInt(id));
   }
 
   const getFavoriteProducts = () => {
-    return products.filter(product => favorites.includes(product.id))
+    return products.filter(product => favorites.includes(product.id));
   }
+  
+  const value = {
+    products,
     loading,
     error,
-
-    getProductById: getProductByIdFromApi,
-    getFavoriteProducts,
-    refreshProducts: () => fetchProducts().then(data => setProducts(data))
     favorites,
     toggleFavorite,
-    getProductById,
-    getFavoriteProducts
+    getProductById: getProductByIdLocal,
+    getProductByIdFromApi,
+    getFavoriteProducts,
+    refreshProducts: () => fetchProducts().then(data => setProducts(data))
   }
 
   return (
