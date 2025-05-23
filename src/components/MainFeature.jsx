@@ -262,7 +262,6 @@ const MainFeature = () => {
         </motion.div>
 
         {/* Main Content */}
-                <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <motion.div
