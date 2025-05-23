@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../contexts/CartContext'
 import { useDeals } from '../contexts/DealsContext'
-import { useDeals } from '../contexts/DealsContext'
 import ApperIcon from './ApperIcon'
 import Categories from './Categories'
 import CartSidebar from './CartSidebar'
@@ -49,12 +48,6 @@ const Header = () => {
                 Home
               </Link>
               
-              <Link 
-                to="/deals" 
-                className="text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium"
-              >
-                Deals
-              </Link>
               <Link 
                 to="/deals" 
                 className="text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium"
