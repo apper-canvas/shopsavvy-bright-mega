@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import Products from './pages/Products'
 import Categories from './pages/Categories'
 import CategoryView from './pages/CategoryView'
+import Checkout from './pages/Checkout'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
               <Route path="/products" element={<Products />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/category/:categoryId" element={<CategoryView />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

@@ -1,16 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCart } from '../contexts/CartContext'
+import { useNavigate } from 'react-router-dom'
 import ApperIcon from './ApperIcon'
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart()
+  const navigate = useNavigate()
 
   const handleCheckout = () => {
     if (cart.items.length === 0) {
       return
     }
     
-    clearCart()
+    navigate('/checkout')
     onClose()
   }
 
