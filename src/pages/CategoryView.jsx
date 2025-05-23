@@ -83,7 +83,7 @@ const CategoryView = () => {
           <h1 className="text-2xl font-bold text-surface-900 dark:text-surface-100 mb-4">Category Not Found</h1>
           <button
             onClick={() => navigate('/categories')}
-            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-semibold"
           >
             Browse All Categories
           </button>
@@ -99,7 +99,7 @@ const CategoryView = () => {
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate('/categories')}
-            className="flex items-center space-x-3 text-surface-600 hover:text-primary-600 transition-colors"
+            className="flex items-center space-x-3 text-surface-900 dark:text-surface-100 hover:text-primary-600 transition-colors font-medium"
           >
             <ApperIcon name="ArrowLeft" className="h-5 w-5" />
             <span className="font-medium">All Categories</span>
@@ -129,7 +129,7 @@ const CategoryView = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="px-4 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-surface-900 dark:text-surface-100"
           >
             <option value="name">Sort by Name</option>
             <option value="price-low">Price: Low to High</option>
@@ -140,7 +140,7 @@ const CategoryView = () => {
           <select
             value={filterBy}
             onChange={(e) => setFilterBy(e.target.value)}
-            className="px-4 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="px-4 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-surface-900 dark:text-surface-100"
           >
             <option value="all">All Products</option>
             <option value="in-stock">In Stock</option>
@@ -207,7 +207,7 @@ const CategoryView = () => {
                         handleAddToCart(product)
                       }}
                       disabled={!product.inStock}
-                      className="px-3 py-1 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-surface-300 disabled:cursor-not-allowed transition-colors text-sm"
+                      className="px-3 py-1 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-surface-300 disabled:text-surface-500 disabled:cursor-not-allowed transition-colors text-sm font-medium"
                     >
                       Add to Cart
                     </button>

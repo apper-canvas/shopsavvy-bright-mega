@@ -41,7 +41,7 @@ const Categories = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        className="flex items-center space-x-1 text-surface-600 hover:text-primary-600 transition-colors font-medium"
+        className="flex items-center space-x-1 text-surface-900 dark:text-surface-100 hover:text-primary-600 transition-colors font-medium"
         onClick={() => setIsOpen(!isOpen)}
         onMouseEnter={() => setIsOpen(true)}
       >
@@ -86,7 +86,7 @@ const Categories = () => {
               </div>
               <button
                 onClick={handleViewAllCategories}
-                className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-200"
+                className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-200"
               >
                 View All Categories
               </button>

@@ -246,16 +246,16 @@ const MainFeature = () => {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'grid' 
-                    ? 'bg-white dark:bg-surface-600 shadow-sm' 
-                    : 'hover:bg-surface-200 dark:hover:bg-surface-600'}`}
+                    ? 'bg-white dark:bg-surface-600 shadow-sm text-surface-900 dark:text-surface-100' 
+                    : 'hover:bg-surface-200 dark:hover:bg-surface-600 text-surface-600 dark:text-surface-400'}`}
                 >
                   <ApperIcon name="Grid3X3" className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'list' 
-                    ? 'bg-white dark:bg-surface-600 shadow-sm' 
-                    : 'hover:bg-surface-200 dark:hover:bg-surface-600'}`}
+                    ? 'bg-white dark:bg-surface-600 shadow-sm text-surface-900 dark:text-surface-100' 
+                    : 'hover:bg-surface-200 dark:hover:bg-surface-600 text-surface-600 dark:text-surface-400'}`}
                 >
                   <ApperIcon name="List" className="h-4 w-4" />
                 </button>
@@ -287,7 +287,7 @@ const MainFeature = () => {
                 </h3>
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-primary-600 hover:text-primary-700 transition-colors"
+                  className="text-sm text-primary-600 hover:text-primary-700 transition-colors font-medium"
                 >
                   Clear All
                 </button>
@@ -563,7 +563,7 @@ const MainFeature = () => {
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
                 >
                   Clear Filters
                 </button>
@@ -668,7 +668,7 @@ const MainFeature = () => {
                           {selectedProduct.sizes.map(size => (
                             <button
                               key={size}
-                              className="px-3 py-2 border border-surface-300 dark:border-surface-600 rounded-lg text-sm hover:border-primary-500 hover:text-primary-600 transition-colors"
+                              className="px-3 py-2 border border-surface-300 dark:border-surface-600 rounded-lg text-sm hover:border-primary-500 hover:text-primary-600 transition-colors text-surface-900 dark:text-surface-100"
                             >
                               {size}
                             </button>
@@ -702,7 +702,7 @@ const MainFeature = () => {
                         disabled={!selectedProduct.inStock}
                         className={`flex-1 py-3 rounded-lg font-medium transition-all ${
                           selectedProduct.inStock
-                            ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white hover:shadow-lg'
+                            ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white hover:shadow-lg font-semibold'
                             : 'bg-surface-300 text-surface-500 cursor-not-allowed'
                         }`}
                       >
@@ -712,8 +712,8 @@ const MainFeature = () => {
                         onClick={() => toggleFavorite(selectedProduct.id)}
                         className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                           favorites.includes(selectedProduct.id)
-                            ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-900/20'
-                            : 'border-surface-300 dark:border-surface-600 hover:border-red-500 hover:text-red-500'
+                            ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-900/20 font-medium'
+                            : 'border-surface-300 dark:border-surface-600 hover:border-red-500 hover:text-red-500 text-surface-600 dark:text-surface-400'
                         }`}
                       >
                         <ApperIcon name="Heart" className="h-5 w-5" />
@@ -724,7 +724,7 @@ const MainFeature = () => {
 
                 <button
                   onClick={() => setSelectedProduct(null)}
-                  className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors"
+                  className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors font-medium"
                 >
                   <ApperIcon name="X" className="h-4 w-4" />
                 </button>
