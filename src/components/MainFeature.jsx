@@ -418,8 +418,8 @@ const MainFeature = () => {
                         >
                           <ApperIcon name="Eye" className="h-5 w-5" />
                         </button>
+                        <button
                           onClick={() => handleFavoriteToggle(product.id)}
-                          onClick={() => toggleFavorite(product.id)}
                           className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
                             favorites.includes(product.id)
                               ? 'bg-red-500 text-white'
@@ -698,8 +698,8 @@ const MainFeature = () => {
                       >
                         {selectedProduct.inStock ? 'Add to Cart' : 'Out of Stock'}
                       </button>
+                      <button
                         onClick={() => handleFavoriteToggle(selectedProduct.id)}
-                        onClick={() => toggleFavorite(selectedProduct.id)}
                         className={`px-4 py-3 rounded-lg border-2 transition-colors ${
                           favorites.includes(selectedProduct.id)
                             ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-900/20 font-medium'
