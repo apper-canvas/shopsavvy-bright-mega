@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
+import Header from '../components/Header'
 import Categories from '../components/Categories'
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false)
+        <Header />
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)

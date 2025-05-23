@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-toastify'
+import { useCart } from '../contexts/CartContext'
 import ApperIcon from './ApperIcon'
 
 const MainFeature = () => {
@@ -8,6 +9,7 @@ const MainFeature = () => {
   const [priceRange, setPriceRange] = useState([0, 1000])
   const [selectedBrand, setSelectedBrand] = useState('all')
   const [selectedSize, setSelectedSize] = useState('all')
+  const { addToCart } = useCart()
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('relevance')
   const [viewMode, setViewMode] = useState('grid')
@@ -139,6 +141,12 @@ const MainFeature = () => {
       return matchesCategory && matchesPrice && matchesBrand && matchesSize && matchesSearch
     })
     .sort((a, b) => {
+  const handleAddToCart = (product) => {
+    addToCart({
+      ...product,
+      image: product.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400'
+    })
+  }
       switch (sortBy) {
         case 'price_low':
           return a.price - b.price
@@ -279,6 +287,14 @@ const MainFeature = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
+                      <motion.button
+                        onClick={() => handleAddToCart(product)}
+                        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Add to Cart
+                      </motion.button>
           >
             <div className="bg-white dark:bg-surface-800 rounded-2xl shadow-neu-light dark:shadow-neu-dark p-6 sticky top-24">
               <div className="flex items-center justify-between mb-6">
@@ -322,6 +338,14 @@ const MainFeature = () => {
                     <div className="flex items-center space-x-3">
                       <input
                         type="number"
+                      <motion.button
+                        onClick={() => handleAddToCart(product)}
+                        className="px-6 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Add to Cart
+                      </motion.button>
                         value={priceRange[0]}
                         onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
                         className="w-20 px-2 py-1 text-xs rounded border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700"
