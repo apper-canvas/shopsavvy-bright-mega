@@ -39,6 +39,7 @@ const Header = () => {
               </div>
             </Link>
 
+          <Link to="/products" className="text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium">Products</Link>
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
               <Link 
@@ -81,6 +82,7 @@ const Header = () => {
               <span className="hidden sm:inline text-sm font-semibold text-primary-600 dark:text-primary-400">
                 Cart
               </span>
+            <Link to="/products" className="text-surface-700 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium">Products</Link>
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
                   {totalItems > 99 ? '99+' : totalItems}
