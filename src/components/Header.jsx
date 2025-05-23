@@ -1,17 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useContext } from 'react'
-import { AuthContext } from '../App'
+import { useContext } from 'react' 
+import { AuthContext } from '../App' 
 import { motion } from 'framer-motion'
 import { useCart } from '../contexts/CartContext'
 import { useDeals } from '../contexts/DealsContext'
 import { useProducts } from '../contexts/ProductsContext'
-  const { user, isAuthenticated } = useSelector((state) => state.user)
-  const { logout } = useContext(AuthContext)
 import { useTracking } from '../contexts/TrackingContext'
-import { useContext } from 'react'
-import { AuthContext } from '../App'
 import ApperIcon from './ApperIcon'
 import Categories from './Categories'
 import CartSidebar from './CartSidebar'
@@ -19,6 +15,8 @@ import CartSidebar from './CartSidebar'
 const Header = () => {
   const { getTotalItems } = useCart()
   const { getPendingShipmentsCount } = useTracking()
+  const { user, isAuthenticated } = useSelector((state) => state.user)
+  const { logout } = useContext(AuthContext)
   const { favorites } = useProducts()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const totalItems = getTotalItems()
@@ -125,6 +123,7 @@ const Header = () => {
                     </button>
                   </div>
                 ) : (
+                  <div>
             <motion.button
               onClick={() => setIsCartOpen(true)}
               className="relative flex items-center space-x-2 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30 px-4 py-2 rounded-xl transition-colors"
@@ -141,6 +140,7 @@ const Header = () => {
                 </span>
               )}
             </motion.button>
+                  </div>
             </div>
           </div>
         </div>
