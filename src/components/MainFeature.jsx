@@ -11,7 +11,6 @@ const MainFeature = () => {
   const [selectedSize, setSelectedSize] = useState('all')
   const { addToCart } = useCart()
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState('relevance')
   const [viewMode, setViewMode] = useState('grid')
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
@@ -141,12 +140,6 @@ const MainFeature = () => {
       return matchesCategory && matchesPrice && matchesBrand && matchesSize && matchesSearch
     })
     .sort((a, b) => {
-  const handleAddToCart = (product) => {
-    addToCart({
-      ...product,
-      image: product.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400'
-    })
-  }
       switch (sortBy) {
         case 'price_low':
           return a.price - b.price
@@ -161,20 +154,7 @@ const MainFeature = () => {
       }
     })
 
-  const addToCart = (product) => {
-    const existingItem = cart.find(item => item.id === product.id)
-    if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ))
-      toast.success(`Added another ${product.name} to cart!`)
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }])
-      toast.success(`${product.name} added to cart!`)
-    }
-  }
+  const { getTotalItems } = useCart()
 
   const toggleFavorite = (productId) => {
     if (favorites.includes(productId)) {
@@ -273,13 +253,12 @@ const MainFeature = () => {
               <div className="flex items-center space-x-2 bg-primary-50 dark:bg-primary-900/20 px-4 py-2 rounded-lg">
                 <ApperIcon name="ShoppingCart" className="h-5 w-5 text-primary-600" />
                 <span className="text-sm font-semibold text-primary-600">
-                  {cart.reduce((sum, item) => sum + item.quantity, 0)} items
+                  {getTotalItems()} items
                 </span>
               </div>
-            </div>
-          </div>
-        </motion.div>
-
+            <div className="bg-white dark:bg-surface-800 rounded-2xl shadow-neu-light dark:shadow-neu-dark p-6 sticky top-24">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
           <motion.div
@@ -287,18 +266,7 @@ const MainFeature = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-                      <motion.button
-                        onClick={() => handleAddToCart(product)}
-                        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        Add to Cart
-                      </motion.button>
           >
-            <div className="bg-white dark:bg-surface-800 rounded-2xl shadow-neu-light dark:shadow-neu-dark p-6 sticky top-24">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
                   Filters
                 </h3>
                 <button
@@ -338,14 +306,6 @@ const MainFeature = () => {
                     <div className="flex items-center space-x-3">
                       <input
                         type="number"
-                      <motion.button
-                        onClick={() => handleAddToCart(product)}
-                        className="px-6 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        Add to Cart
-                      </motion.button>
                         value={priceRange[0]}
                         onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
                         className="w-20 px-2 py-1 text-xs rounded border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700"
