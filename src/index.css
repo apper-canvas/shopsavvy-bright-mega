@@ -27,6 +27,18 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
+  .payment-method-card {
+    @apply p-4 rounded-xl border-2 transition-all cursor-pointer hover:shadow-md;
+  }
+  
+  .payment-method-active {
+    @apply border-primary-600 bg-primary-50 dark:bg-primary-900/20;
+  }
+  
+  .payment-method-inactive {
+    @apply border-surface-300 dark:border-surface-600 hover:border-primary-300;
+  }
+  
 
 @layer base {
   :root {

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import Header from '../components/Header'
 import ApperIcon from '../components/ApperIcon'
+import { loadStripe } from '@stripe/stripe-js'
 
 const Checkout = () => {
   const navigate = useNavigate()
@@ -11,6 +12,8 @@ const Checkout = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderNumber, setOrderNumber] = useState('')
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [paymentError, setPaymentError] = useState('')
   
   const [customerInfo, setCustomerInfo] = useState({
     firstName: '',
@@ -34,6 +37,14 @@ const Checkout = () => {
     expiryDate: '',
     cvv: '',
     nameOnCard: ''
+  })
+  
+  const [billingAddress, setBillingAddress] = useState({
+    sameAsShipping: true,
+    address: '',
+    city: '',
+    state: '',
+    zipCode: ''
   })
 
   const subtotal = getTotalPrice()
@@ -74,6 +85,125 @@ const Checkout = () => {
 
   const handlePaymentSubmit = (e) => {
     e.preventDefault()
+    setPaymentError('')
+    
+    if (paymentMethod === 'card') {
+      if (!cardInfo.cardNumber || !cardInfo.expiryDate || !cardInfo.cvv || !cardInfo.nameOnCard) {
+        setPaymentError('Please fill in all card details')
+        return
+      }
+      
+      // Basic card validation
+      if (cardInfo.cardNumber.replace(/\s/g, '').length < 13) {
+        setPaymentError('Please enter a valid card number')
+        return
+      }
+      
+      if (!cardInfo.expiryDate.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) {
+        setPaymentError('Please enter expiry date in MM/YY format')
+        return
+      }
+      
+      if (cardInfo.cvv.length < 3) {
+        setPaymentError('Please enter a valid CVV')
+        return
+      }
+    }
+    
+    setCurrentStep(4)
+  }
+
+  const processPayment = async () => {
+    setIsProcessingPayment(true)
+    setPaymentError('')
+    
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      // In a real app, you would integrate with Stripe or another payment processor
+      // const stripe = await loadStripe('your-publishable-key')
+      // const result = await stripe.confirmCardPayment(clientSecret, {...})
+      
+      // Simulate random payment success/failure for demo
+      const success = Math.random() > 0.1 // 90% success rate
+      
+      if (!success) {
+        throw new Error('Payment was declined. Please try again with a different payment method.')
+      }
+      
+      const orderNum = 'ORD-' + Date.now().toString().slice(-6)
+      setOrderNumber(orderNum)
+      setOrderPlaced(true)
+      clearCart()
+      
+    } catch (error) {
+      setPaymentError(error.message || 'Payment processing failed. Please try again.')
+    } finally {
+      setIsProcessingPayment(false)
+    }
+  }
+
+  const formatCardNumber = (value) => {
+    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+    const matches = v.match(/\d{4,16}/g)
+    const match = matches && matches[0] || ''
+    const parts = []
+    for (let i = 0, len = match.length; i < len; i += 4) {
+      parts.push(match.substring(i, i + 4))
+    }
+    if (parts.length) {
+      return parts.join(' ')
+    } else {
+      return v
+    }
+  }
+
+  const formatExpiryDate = (value) => {
+    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+    if (v.length >= 2) {
+      return v.substring(0, 2) + '/' + v.substring(2, 4)
+    }
+    return v
+  }
+
+  const handleCardNumberChange = (e) => {
+    const formatted = formatCardNumber(e.target.value)
+    if (formatted.length <= 19) {
+      setCardInfo({...cardInfo, cardNumber: formatted})
+    }
+  }
+
+  const handleExpiryChange = (e) => {
+    const formatted = formatExpiryDate(e.target.value)
+    if (formatted.length <= 5) {
+      setCardInfo({...cardInfo, expiryDate: formatted})
+    }
+  }
+
+  const handleCvvChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/gi, '')
+    if (value.length <= 4) {
+      setCardInfo({...cardInfo, cvv: value})
+    }
+  }
+
+  const handleBillingAddressToggle = (e) => {
+    const sameAsShipping = e.target.checked
+    setBillingAddress({
+      ...billingAddress,
+      sameAsShipping,
+      ...(sameAsShipping ? {
+        address: shippingAddress.address,
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        zipCode: shippingAddress.zipCode
+      } : {})
+    })
+  }
+
+  const handleOldPaymentSubmit = (e) => {
+    e.preventDefault()
     if (paymentMethod === 'card') {
       if (cardInfo.cardNumber && cardInfo.expiryDate && cardInfo.cvv && cardInfo.nameOnCard) {
         setCurrentStep(4)
@@ -81,13 +211,6 @@ const Checkout = () => {
     } else {
       setCurrentStep(4)
     }
-  }
-
-  const handlePlaceOrder = () => {
-    const orderNum = 'ORD-' + Date.now().toString().slice(-6)
-    setOrderNumber(orderNum)
-    setOrderPlaced(true)
-    clearCart()
   }
 
   if (cart.items.length === 0 && !orderPlaced) {
@@ -433,37 +556,310 @@ const Checkout = () => {
                     </form>
                   )}
 
-                  {/* Additional steps would be implemented here with similar structure */}
-                  {currentStep > 2 && (
-                    <div className="text-center py-8">
+                  {/* Step 3: Payment */}
+                  {currentStep === 3 && (
+                    <form onSubmit={handlePaymentSubmit} className="space-y-6">
                       <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100 mb-4">
-                        Step {currentStep} Content
+                        Payment Information
                       </h2>
-                      <p className="text-surface-600 dark:text-surface-400 mb-6">
-                        This step is implemented and ready for completion
-                      </p>
+                      
+                      {paymentError && (
+                        <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                          <div className="flex items-center space-x-2">
+                            <ApperIcon name="AlertCircle" className="h-5 w-5 text-red-600" />
+                            <p className="text-red-600 dark:text-red-400 font-medium">{paymentError}</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Payment Method Selection */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
+                          Payment Method
+                        </h3>
+                        
+                        <div className="grid gap-3">
+                          {[
+                            { id: 'card', name: 'Credit/Debit Card', icon: 'CreditCard', description: 'Pay with Visa, Mastercard, or American Express' },
+                            { id: 'paypal', name: 'PayPal', icon: 'Wallet', description: 'Pay securely with your PayPal account' },
+                            { id: 'apple', name: 'Apple Pay', icon: 'Smartphone', description: 'Pay with Touch ID or Face ID' }
+                          ].map((method) => (
+                            <div 
+                              key={method.id} 
+                              className={`payment-method-card ${
+                                paymentMethod === method.id ? 'payment-method-active' : 'payment-method-inactive'
+                              }`}
+                              onClick={() => setPaymentMethod(method.id)}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <input
+                                  type="radio"
+                                  name="paymentMethod"
+                                  value={method.id}
+                                  checked={paymentMethod === method.id}
+                                  onChange={(e) => setPaymentMethod(e.target.value)}
+                                  className="text-primary-600"
+                                />
+                                <ApperIcon name={method.icon} className="h-6 w-6 text-surface-600 dark:text-surface-400" />
+                                <div>
+                                  <p className="font-medium text-surface-900 dark:text-surface-100">{method.name}</p>
+                                  <p className="text-sm text-surface-600 dark:text-surface-400">{method.description}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Card Details */}
+                      {paymentMethod === 'card' && (
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
+                            Card Details
+                          </h3>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                              Card Number *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={cardInfo.cardNumber}
+                              onChange={handleCardNumberChange}
+                              className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100 font-mono"
+                              placeholder="1234 5678 9012 3456"
+                            />
+                          </div>
+                          
+                          <div className="grid sm:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                                Expiry Date *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={cardInfo.expiryDate}
+                                onChange={handleExpiryChange}
+                                className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100 font-mono"
+                                placeholder="MM/YY"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                                CVV *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={cardInfo.cvv}
+                                onChange={handleCvvChange}
+                                className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100 font-mono"
+                                placeholder="123"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                              Name on Card *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={cardInfo.nameOnCard}
+                              onChange={(e) => setCardInfo({...cardInfo, nameOnCard: e.target.value})}
+                              className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                              placeholder="John Doe"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Billing Address */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
+                          Billing Address
+                        </h3>
+                        
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="sameAsShipping"
+                            checked={billingAddress.sameAsShipping}
+                            onChange={handleBillingAddressToggle}
+                            className="text-primary-600"
+                          />
+                          <label htmlFor="sameAsShipping" className="text-sm font-medium text-surface-700 dark:text-surface-300">
+                            Same as shipping address
+                          </label>
+                        </div>
+                        
+                        {!billingAddress.sameAsShipping && (
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                                Street Address *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={billingAddress.address}
+                                onChange={(e) => setBillingAddress({...billingAddress, address: e.target.value})}
+                                className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                              />
+                            </div>
+                            
+                            <div className="grid sm:grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                                  City *
+                                </label>
+                                <input
+                                  type="text"
+                                  required
+                                  value={billingAddress.city}
+                                  onChange={(e) => setBillingAddress({...billingAddress, city: e.target.value})}
+                                  className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                                  State *
+                                </label>
+                                <select
+                                  required
+                                  value={billingAddress.state}
+                                  onChange={(e) => setBillingAddress({...billingAddress, state: e.target.value})}
+                                  className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                                >
+                                  <option value="">Select State</option>
+                                  <option value="AL">Alabama</option>
+                                  <option value="CA">California</option>
+                                  <option value="FL">Florida</option>
+                                  <option value="NY">New York</option>
+                                  <option value="TX">Texas</option>
+                                </select>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                                ZIP Code *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={billingAddress.zipCode}
+                                onChange={(e) => setBillingAddress({...billingAddress, zipCode: e.target.value})}
+                                className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
                       <div className="flex space-x-4">
                         <button
-                          onClick={() => setCurrentStep(currentStep - 1)}
+                          type="button"
+                          onClick={() => setCurrentStep(2)}
+                          className="flex-1 py-3 border border-surface-300 dark:border-surface-600 text-surface-700 dark:text-surface-300 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors font-medium"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="submit"
+                          className="flex-1 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                        >
+                          Review Order
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                  
+                  {/* Step 4: Review */}
+                  {currentStep === 4 && (
+                    <div className="space-y-6">
+                      <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100">
+                        Review Your Order
+                      </h2>
+                      
+                      {paymentError && (
+                        <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                          <div className="flex items-center space-x-2">
+                            <ApperIcon name="AlertCircle" className="h-5 w-5 text-red-600" />
+                            <p className="text-red-600 dark:text-red-400 font-medium">{paymentError}</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Order Summary */}
+                      <div className="bg-surface-50 dark:bg-surface-700 rounded-lg p-4">
+                        <h3 className="font-semibold text-surface-900 dark:text-surface-100 mb-3">Order Details</h3>
+                        <div className="space-y-2">
+                          {cart.items.map((item) => (
+                            <div key={item.id} className="flex justify-between text-sm">
+                              <span>{item.name} × {item.quantity}</span>
+                              <span>${(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Customer Info */}
+                      <div className="bg-surface-50 dark:bg-surface-700 rounded-lg p-4">
+                        <h3 className="font-semibold text-surface-900 dark:text-surface-100 mb-2">Customer Information</h3>
+                        <p className="text-sm text-surface-600 dark:text-surface-400">
+                          {customerInfo.firstName} {customerInfo.lastName}<br />
+                          {customerInfo.email}
+                        </p>
+                      </div>
+                      
+                      {/* Shipping Info */}
+                      <div className="bg-surface-50 dark:bg-surface-700 rounded-lg p-4">
+                        <h3 className="font-semibold text-surface-900 dark:text-surface-100 mb-2">Shipping Address</h3>
+                        <p className="text-sm text-surface-600 dark:text-surface-400">
+                          {shippingAddress.address}<br />
+                          {shippingAddress.city}, {shippingAddress.state} {shippingAddress.zipCode}
+                        </p>
+                      </div>
+                      
+                      {/* Payment Info */}
+                      <div className="bg-surface-50 dark:bg-surface-700 rounded-lg p-4">
+                        <h3 className="font-semibold text-surface-900 dark:text-surface-100 mb-2">Payment Method</h3>
+                        <p className="text-sm text-surface-600 dark:text-surface-400">
+                          {paymentMethod === 'card' && `Credit Card ending in ${cardInfo.cardNumber.slice(-4)}`}
+                          {paymentMethod === 'paypal' && 'PayPal'}
+                          {paymentMethod === 'apple' && 'Apple Pay'}
+                        </p>
+                      </div>
+                      
+                      <div className="flex space-x-4">
+                        <button
+                          type="button"
+                          onClick={() => setCurrentStep(3)}
                           className="px-6 py-3 border border-surface-300 dark:border-surface-600 text-surface-700 dark:text-surface-300 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors font-medium"
                         >
                           Back
                         </button>
-                        {currentStep < 4 ? (
-                          <button
-                            onClick={() => setCurrentStep(currentStep + 1)}
-                            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
-                          >
-                            Continue
-                          </button>
-                        ) : (
-                          <button
-                            onClick={handlePlaceOrder}
-                            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-                          >
-                            Place Order
-                          </button>
-                        )}
+                        <button
+                          onClick={processPayment}
+                          disabled={isProcessingPayment}
+                          className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center space-x-2"
+                        >
+                          {isProcessingPayment ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                              <span>Processing Payment...</span>
+                            </>
+                          ) : (
+                            <>
+                              <ApperIcon name="CreditCard" className="h-4 w-4" />
+                              <span>Place Order - ${total.toFixed(2)}</span>
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
                   )}
