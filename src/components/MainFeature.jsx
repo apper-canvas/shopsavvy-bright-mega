@@ -248,11 +248,11 @@ const MainFeature = () => {
                   className={`p-2 rounded-md transition-all ${viewMode === 'grid' 
                     ? 'bg-white dark:bg-surface-600 shadow-sm text-surface-900 dark:text-surface-100' 
                     : 'hover:bg-surface-200 dark:hover:bg-surface-600 text-surface-600 dark:text-surface-400'}`}
-              {/* Items Counter */}
-              <div className="flex items-center space-x-2 bg-surface-100 dark:bg-surface-700 px-4 py-2 rounded-lg">
+                >
+                  <ApperIcon name="Grid3X3" className="h-4 w-4" />
                 </button>
-                <span className="text-sm font-semibold text-surface-600 dark:text-surface-400">
-                  {getTotalItems()} items
+                <button
+                  onClick={() => setViewMode('list')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'list' 
                     ? 'bg-white dark:bg-surface-600 shadow-sm text-surface-900 dark:text-surface-100' 
                     : 'hover:bg-surface-200 dark:hover:bg-surface-600 text-surface-600 dark:text-surface-400'}`}
