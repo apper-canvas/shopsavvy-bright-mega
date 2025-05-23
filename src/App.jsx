@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { CartProvider } from './contexts/CartContext'
+import { DealsProvider } from './contexts/DealsContext'
+import Deals from './pages/Deals'
 import Home from './pages/Home'
 import Categories from './pages/Categories'
 import CategoryView from './pages/CategoryView'
@@ -10,13 +12,15 @@ import NotFound from './pages/NotFound'
 function App() {
   return (
     <CartProvider>
-      <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-white dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/category/:categoryId" element={<CategoryView />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+      <DealsProvider>
+        <div className="min-h-screen bg-gradient-to-br from-primary-100 via-primary-50 to-white dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/deals" element={<Deals />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/category/:categoryId" element={<CategoryView />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         
         <ToastContainer
           position="top-right"
@@ -35,6 +39,7 @@ function App() {
           progressClassName="!bg-gradient-to-r !from-primary-500 !to-secondary-500"
         />
       </div>
+      </DealsProvider>
     </CartProvider>
   )
 }
