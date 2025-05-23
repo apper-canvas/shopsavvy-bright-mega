@@ -146,7 +146,8 @@ const Checkout = () => {
         customerInfo
       })
       
-      setOrderPlaced(true)      clearCart()
+      setOrderPlaced(true);
+      clearCart()
       
     } catch (error) {
       setPaymentError(error.message || 'Payment processing failed. Please try again.')
@@ -284,16 +285,10 @@ const Checkout = () => {
                 </p>
                 <div className="space-y-3">
                   <button
-                    onClick={() => navigate('/products')}
-                  >
-                    Track Your Order
-                  </button>
-                  <button
-                    onClick={() => navigate('/')}
-                    className="w-full px-6 py-3 border border-surface-300 dark:border-surface-600 text-surface-700 dark:text-surface-300 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors font-medium"
+                    onClick={() => navigate('/tracking')}
                     className="w-full px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
                   >
-                    Continue Shopping
+                    Track Your Order
                   </button>
                   <button
                     onClick={() => navigate('/')}
