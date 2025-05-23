@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { CartProvider } from './contexts/CartContext'
 import 'react-toastify/dist/ReactToastify.css'
 import Home from './pages/Home'
 import Categories from './pages/Categories'
@@ -8,7 +9,8 @@ import NotFound from './pages/NotFound'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-primary-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
+    <CartProvider>
+      <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-primary-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
@@ -32,9 +34,9 @@ function App() {
         bodyClassName="!text-surface-800 dark:!text-surface-200 !font-medium"
         progressClassName="!bg-gradient-to-r !from-primary-500 !to-secondary-500"
       />
-    </div>
+      </div>
+    </CartProvider>
   )
 }
 
 export default App
-    </CartProvider>
