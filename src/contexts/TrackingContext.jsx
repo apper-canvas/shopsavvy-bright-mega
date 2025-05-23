@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
+import { 
+  createTracking, 
+  getTrackingByNumber, 
+  updateTrackingStatus, 
+  createTrackingEvent } from '../services/trackingService'
 
 const TrackingContext = createContext()
 
@@ -13,6 +18,8 @@ export const useTracking = () => {
 
 export const TrackingProvider = ({ children }) => {
   const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [notifications, setNotifications] = useState({
     email: true,
@@ -34,90 +41,118 @@ export const TrackingProvider = ({ children }) => {
   }, [orders])
 
   // Create new order tracking
-  const createOrderTracking = (orderData) => {
-    const trackingNumber = generateTrackingNumber()
-    const estimatedDelivery = new Date()
-    estimatedDelivery.setDate(estimatedDelivery.getDate() + getDeliveryDays(orderData.shippingMethod))
-
-    const newOrder = {
-      id: Date.now().toString(),
-      orderNumber: orderData.orderNumber,
-      trackingNumber,
-      status: 'processing',
-      estimatedDelivery: estimatedDelivery.toISOString(),
-      items: orderData.items,
-      shippingMethod: orderData.shippingMethod,
-      shippingAddress: orderData.shippingAddress,
-      customerInfo: orderData.customerInfo,
-      timeline: [
-        {
-          id: 1,
-          status: 'processing',
-          title: 'Order Processing',
-          description: 'Your order is being processed',
-          timestamp: new Date().toISOString(),
-          completed: true,
-          location: 'Processing Center'
-        }
-      ],
-      currentLocation: {
-        city: 'Processing Center',
-        state: 'CA',
-        country: 'USA',
-        coordinates: { lat: 37.7749, lng: -122.4194 }
-      },
-      createdAt: new Date().toISOString()
+  const createOrderTracking = async (orderData) => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const trackingData = await createTracking(orderData)
+      const newOrder = formatTrackingData(trackingData, orderData)
+      
+      setOrders(prev => [newOrder, ...prev])
+      toast.success(`Order ${orderData.orderNumber} is now being tracked!`)
+      
+      return newOrder
+    } catch (error) {
+      console.error("Error creating order tracking:", error)
+      setError("Failed to create tracking for this order")
+      toast.error("Failed to create tracking for this order")
+      return null
+    } finally {
+      setLoading(false)
     }
-
-    setOrders(prev => [newOrder, ...prev])
-    toast.success(`Order ${orderData.orderNumber} is now being tracked!`)
-    
-    // Simulate status updates
-    simulateDeliveryProgress(newOrder.id)
-    
-    return newOrder
   }
 
   // Get order by tracking number
-  const getOrderByTrackingNumber = (trackingNumber) => {
-    return orders.find(order => order.trackingNumber === trackingNumber)
+  const getOrderByTrackingNumber = async (trackingNumber) => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      // First check local state
+      const localOrder = orders.find(order => order.trackingNumber === trackingNumber)
+      if (localOrder) return localOrder
+      
+      // Then check the API
+      const trackingData = await getTrackingByNumber(trackingNumber)
+      if (!trackingData) return null
+      
+      // Format the tracking data and add to state
+      const formattedTracking = formatTrackingData(trackingData)
+      setOrders(prev => [formattedTracking, ...prev])
+      
+      return formattedTracking
+    } catch (error) {
+      console.error("Error getting tracking by number:", error)
+      setError("Failed to find tracking information")
+      return null
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Update order status
-  const updateOrderStatus = (orderId, newStatus, location = null) => {
-    setOrders(prev => prev.map(order => {
-      if (order.id === orderId) {
-        const statusConfig = getStatusConfig(newStatus)
-        const newTimelineEvent = {
-          id: order.timeline.length + 1,
-          status: newStatus,
-          title: statusConfig.title,
-          description: statusConfig.description,
-          timestamp: new Date().toISOString(),
-          completed: true,
-          location: location || order.currentLocation.city
-        }
+  const updateOrderStatus = async (trackingId, newStatus, location = null) => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      // Update tracking status in database
+      await updateTrackingStatus(trackingId, newStatus)
+      
+      // Create new tracking event
+      const statusConfig = getStatusConfig(newStatus)
+      await createTrackingEvent(trackingId, {
+        status: newStatus,
+        title: statusConfig.title,
+        description: statusConfig.description,
+        timestamp: new Date().toISOString(),
+        location: location || 'Distribution Center'
+      })
+      
+      // Update local state
+      setOrders(prev => prev.map(order => {
+        if (order.id === trackingId) {
+          const newTimelineEvent = {
+            id: order.timeline.length + 1,
+            status: newStatus,
+            title: statusConfig.title,
+            description: statusConfig.description,
+            timestamp: new Date().toISOString(),
+            completed: true,
+            location: location || order.currentLocation?.city || 'Distribution Center'
+          }
 
-        const updatedOrder = {
-          ...order,
-          status: newStatus,
-          timeline: [...order.timeline, newTimelineEvent],
-          currentLocation: location ? {
-            ...order.currentLocation,
-            city: location,
-            ...getLocationCoordinates(location)
-          } : order.currentLocation
-        }
+          const updatedOrder = {
+            ...order,
+            status: newStatus,
+            timeline: [...order.timeline, newTimelineEvent],
+            currentLocation: location ? {
+              ...order.currentLocation,
+              city: location,
+              ...getLocationCoordinates(location)
+            } : order.currentLocation
+          }
 
-        // Send notification
-        if (notifications.push) {
-          toast.success(`📦 ${statusConfig.title}: ${statusConfig.description}`)
-        }
+          // Send notification
+          if (notifications.push) {
+            toast.success(`📦 ${statusConfig.title}: ${statusConfig.description}`)
+          }
 
-        return updatedOrder
+          return updatedOrder
+        }
+        return order
+      }))
+      
+      return true
+    } catch (error) {
+      console.error("Error updating order status:", error)
+      setError("Failed to update order status")
+      toast.error("Failed to update order status")
+      return false
+    } finally {
+      setLoading(false)
       }
-      return order
-    }))
   }
 
   // Update notification preferences
@@ -143,6 +178,23 @@ export const TrackingProvider = ({ children }) => {
     return orders.filter(order => 
       ['processing', 'shipped', 'in_transit'].includes(order.status)
     ).length
+  }
+
+  // Format tracking data from API to match local state format
+  const formatTrackingData = (trackingData, orderData = {}) => {
+    return {
+      id: trackingData.Id,
+      orderNumber: orderData.orderNumber || trackingData.order,
+      trackingNumber: trackingData.trackingNumber,
+      status: trackingData.currentStatus,
+      estimatedDelivery: trackingData.estimatedDelivery,
+      items: orderData.items || [],
+      shippingMethod: trackingData.shippingMethod,
+      shippingAddress: orderData.shippingAddress || {},
+      customerInfo: orderData.customerInfo || {},
+      timeline: [],
+      createdAt: trackingData.CreatedOn
+    }
   }
 
   // Helper functions
@@ -185,22 +237,12 @@ export const TrackingProvider = ({ children }) => {
     return coordinates[location] || { lat: 37.7749, lng: -122.4194 }
   }
 
-  const simulateDeliveryProgress = (orderId) => {
-    const statuses = ['shipped', 'in_transit', 'out_for_delivery', 'delivered']
-    const locations = ['Los Angeles', 'Phoenix', 'Denver', 'Chicago', 'New York']
-    
-    statuses.forEach((status, index) => {
-      setTimeout(() => {
-        const location = locations[index] || 'Distribution Center'
-        updateOrderStatus(orderId, status, location)
-      }, (index + 1) * 10000) // Update every 10 seconds for demo
-    })
-  }
-
   const value = {
     orders,
     selectedOrder,
     notifications,
+    loading,
+    error,
     setSelectedOrder,
     createOrderTracking,
     getOrderByTrackingNumber,

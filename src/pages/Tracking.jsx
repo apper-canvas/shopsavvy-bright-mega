@@ -11,6 +11,7 @@ function Tracking() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTracking, setSelectedTracking] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -20,17 +21,17 @@ function Tracking() {
     }
 
     setIsSearching(true);
+    setError(null);
     try {
-      const tracking = getOrderByTrackingNumber(searchQuery.trim());
+      const tracking = await getOrderByTrackingNumber(searchQuery.trim());
       if (tracking) {
         setSelectedTracking(tracking);
         toast.success('Tracking information found');
       } else {
         toast.error('Tracking number not found');
-        setSelectedTracking(null);
       }
     } catch (error) {
-      toast.error('Error searching for tracking information');
+      setError('Error searching for tracking information');
     } finally {
       setIsSearching(false);
     }
@@ -88,6 +89,12 @@ function Tracking() {
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="mb-8">
+            </p>
+            
+            {error && (
+            <p className="text-red-500 mt-2 text-sm">
+              {error}
+            </p>
             <div className="flex gap-4 max-w-2xl mx-auto">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-surface-400" />
