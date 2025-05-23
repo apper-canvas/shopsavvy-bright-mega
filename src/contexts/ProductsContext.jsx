@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
 
 const ProductsContext = createContext()
 
@@ -132,10 +131,8 @@ export const ProductsProvider = ({ children }) => {
   const toggleFavorite = (productId) => {
     if (favorites.includes(productId)) {
       setFavorites(favorites.filter(id => id !== productId))
-      toast.info("Removed from favorites")
     } else {
       setFavorites([...favorites, productId])
-      toast.success("Added to favorites!")
     }
   }
 

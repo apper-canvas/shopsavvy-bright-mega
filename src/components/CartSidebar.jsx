@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
 import { useCart } from '../contexts/CartContext'
 import ApperIcon from './ApperIcon'
 
@@ -8,12 +7,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
   const handleCheckout = () => {
     if (cart.items.length === 0) {
-      toast.error('Your cart is empty')
       return
     }
     
-    // Simulate checkout process
-    toast.success('Order placed successfully! Thank you for your purchase.')
     clearCart()
     onClose()
   }

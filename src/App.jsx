@@ -1,6 +1,4 @@
 import { Routes, Route } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { CartProvider } from './contexts/CartContext'
 import { DealsProvider } from './contexts/DealsContext'
 import { ProductsProvider } from './contexts/ProductsContext'
@@ -27,22 +25,6 @@ function App() {
             </Routes>
           </div>
           
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          className="!z-50"
-          toastClassName="!bg-white !shadow-neu-light dark:!bg-surface-800 dark:!shadow-neu-dark !rounded-xl !border !border-surface-200 dark:!border-surface-700"
-          bodyClassName="!text-surface-800 dark:!text-surface-200 !font-medium"
-          progressClassName="!bg-gradient-to-r !from-primary-500 !to-secondary-500"
-        />
         </ProductsProvider>
       </DealsProvider>
     </CartProvider>

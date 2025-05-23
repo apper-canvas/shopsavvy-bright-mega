@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
-import { toast } from 'react-toastify'
 
 const CartContext = createContext()
 
@@ -51,12 +50,10 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product) => {
     dispatch({ type: 'ADD_TO_CART', payload: product })
-    toast.success(`${product.name} added to cart!`)
   }
 
   const removeFromCart = (productId) => {
     dispatch({ type: 'REMOVE_FROM_CART', payload: productId })
-    toast.info('Item removed from cart')
   }
 
   const updateQuantity = (productId, quantity) => {
@@ -65,7 +62,6 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     dispatch({ type: 'CLEAR_CART' })
-    toast.success('Cart cleared!')
   }
 
   const getTotalItems = () => cart.items.reduce((sum, item) => sum + item.quantity, 0)

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
 import { useCart } from '../contexts/CartContext'
 import ApperIcon from './ApperIcon'
 
@@ -160,10 +159,8 @@ const MainFeature = () => {
   const toggleFavorite = (productId) => {
     if (favorites.includes(productId)) {
       setFavorites(favorites.filter(id => id !== productId))
-      toast.info("Removed from favorites")
     } else {
       setFavorites([...favorites, productId])
-      toast.success("Added to favorites!")
     }
   }
 
@@ -174,7 +171,6 @@ const MainFeature = () => {
     setSelectedSize('all')
     setSearchTerm('')
     setSortBy('relevance')
-    toast.info("Filters cleared!")
   }
 
   return (
