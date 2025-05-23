@@ -89,11 +89,10 @@ function Tracking() {
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="mb-8">
-            </p>
-            
-            {error && (
-            <p className="text-red-500 mt-2 text-sm">
-              {error}
+            {error && ( 
+              <p className="text-red-500 mt-2 text-sm">
+                {error}
+              </p>
             </p>
             <div className="flex gap-4 max-w-2xl mx-auto">
               <div className="flex-1 relative">
