@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import ApperIcon from './ApperIcon'
 
@@ -16,6 +17,7 @@ const MainFeature = () => {
   const [favorites, setFavorites] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
 
+  const navigate = useNavigate()
   // Mock product data
   const [products] = useState([
     {
@@ -400,15 +402,16 @@ const MainFeature = () => {
                     layout
                   >
                     {/* Product Image */}
-                    <div className={`relative overflow-hidden ${
+                    <div className={`relative overflow-hidden cursor-pointer ${
                       viewMode === 'list' ? 'sm:w-48 h-48 sm:h-auto' : 'aspect-square'
-                    }`}>
+                    }`}
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    >
                       <img
                         src={product.image}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      
                       {/* Overlay Actions */}
                       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-3">
                         <button
@@ -447,8 +450,11 @@ const MainFeature = () => {
                     {/* Product Info */}
                     <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
                       <div className="space-y-3">
-                        <div>
-                          <h3 className="font-semibold text-surface-900 dark:text-surface-100 group-hover:text-primary-600 transition-colors line-clamp-2">
+                        <div 
+                          className="cursor-pointer"
+                          onClick={() => navigate(`/product/${product.id}`)}
+                        >
+                          <h3 className="font-semibold text-surface-900 dark:text-surface-100 group-hover:text-primary-600 transition-colors line-clamp-2 hover:text-primary-600">
                             {product.name}
                           </h3>
                           <p className="text-sm text-surface-500 mt-1">{product.brand}</p>

@@ -136,10 +136,15 @@ export const ProductsProvider = ({ children }) => {
     }
   }
 
+  const getProductById = (id) => {
+    return products.find(product => product.id === parseInt(id))
+  }
+
   const value = {
     products,
     favorites,
-    toggleFavorite
+    toggleFavorite,
+    getProductById
   }
 
   return (

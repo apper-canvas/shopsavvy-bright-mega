@@ -10,6 +10,7 @@ import Categories from './pages/Categories'
 import CategoryView from './pages/CategoryView'
 import Checkout from './pages/Checkout'
 import Tracking from './pages/Tracking'
+import ProductDetail from './pages/ProductDetail'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
               <Route path="/deals" element={<Deals />} />
               <Route path="/products" element={<Products />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/category/:categoryId" element={<CategoryView />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/tracking" element={<Tracking />} />

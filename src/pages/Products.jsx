@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import { useProducts } from '../contexts/ProductsContext'
 import Header from '../components/Header'
@@ -18,6 +19,7 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [productsPerPage] = useState(9)
   
+  const navigate = useNavigate()
   const { addToCart, getTotalItems } = useCart()
   const { products, favorites, toggleFavorite } = useProducts()
 
@@ -310,9 +312,11 @@ const Products = () => {
                       layout
                     >
                       {/* Product Image */}
-                      <div className={`relative overflow-hidden ${
+                      <div className={`relative overflow-hidden cursor-pointer ${
                         viewMode === 'list' ? 'sm:w-48 h-48 sm:h-auto' : 'aspect-square'
-                      }`}>
+                      }`}
+                      onClick={() => navigate(`/product/${product.id}`)}
+                      >
                         <img
                           src={product.image}
                           alt={product.name}
@@ -357,8 +361,11 @@ const Products = () => {
                       {/* Product Info */}
                       <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
                         <div className="space-y-3">
-                          <div>
-                            <h3 className="font-semibold text-surface-900 dark:text-surface-100 group-hover:text-primary-600 transition-colors line-clamp-2">
+                          <div 
+                            className="cursor-pointer"
+                            onClick={() => navigate(`/product/${product.id}`)}
+                          >
+                            <h3 className="font-semibold text-surface-900 dark:text-surface-100 group-hover:text-primary-600 transition-colors line-clamp-2 hover:text-primary-600">
                               {product.name}
                             </h3>
                             <p className="text-sm text-surface-500 mt-1">{product.brand}</p>
