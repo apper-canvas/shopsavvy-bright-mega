@@ -178,7 +178,6 @@ export const CartProvider = ({ children }) => {
   }
   const getTotalItems = () => Array.isArray(cart?.items) ? cart.items.reduce((sum, item) => sum + (item?.quantity || 0), 0) : 0
   const getTotalPrice = () => Array.isArray(cart?.items) ? cart.items.reduce((sum, item) => sum + ((item?.price || 0) * (item?.quantity || 0)), 0) : 0
-  const getTotalPrice = () => cart.items.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
 
   return (
     <CartContext.Provider value={{ 
