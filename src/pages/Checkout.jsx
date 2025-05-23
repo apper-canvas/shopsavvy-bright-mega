@@ -28,6 +28,7 @@ const Checkout = () => {
   })
   
   const [paymentMethod, setPaymentMethod] = useState('card')
+  const [shippingMethod, setShippingMethod] = useState('standard')
   const [cardInfo, setCardInfo] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -36,7 +37,17 @@ const Checkout = () => {
   })
 
   const subtotal = getTotalPrice()
-  const shipping = subtotal > 50 ? 0 : 9.99
+  const getShippingCost = () => {
+    if (shippingMethod === 'standard') {
+      return subtotal > 50 ? 0 : 9.99
+    } else if (shippingMethod === 'express') {
+      return 12.99
+    } else if (shippingMethod === 'overnight') {
+      return 24.99
+    }
+    return 0
+  }
+  const shipping = getShippingCost()
   const tax = subtotal * 0.08
   const total = subtotal + shipping + tax
 
@@ -56,7 +67,7 @@ const Checkout = () => {
 
   const handleShippingSubmit = (e) => {
     e.preventDefault()
-    if (shippingAddress.address && shippingAddress.city && shippingAddress.state && shippingAddress.zipCode) {
+    if (shippingAddress.address && shippingAddress.city && shippingAddress.state && shippingAddress.zipCode && shippingMethod) {
       setCurrentStep(3)
     }
   }
@@ -271,8 +282,159 @@ const Checkout = () => {
                     </form>
                   )}
 
+                  {/* Step 2: Shipping */}
+                  {currentStep === 2 && (
+                    <form onSubmit={handleShippingSubmit} className="space-y-6">
+                      <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100">
+                        Shipping Information
+                      </h2>
+                      
+                      {/* Shipping Address */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
+                          Shipping Address
+                        </h3>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                            Street Address *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={shippingAddress.address}
+                            onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}
+                            className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                            placeholder="123 Main Street"
+                          />
+                        </div>
+                        
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                              City *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={shippingAddress.city}
+                              onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
+                              className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                              placeholder="New York"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                              State *
+                            </label>
+                            <select
+                              required
+                              value={shippingAddress.state}
+                              onChange={(e) => setShippingAddress({...shippingAddress, state: e.target.value})}
+                              className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                            >
+                              <option value="">Select State</option>
+                              <option value="AL">Alabama</option>
+                              <option value="CA">California</option>
+                              <option value="FL">Florida</option>
+                              <option value="NY">New York</option>
+                              <option value="TX">Texas</option>
+                            </select>
+                          </div>
+                        </div>
+                        
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                              ZIP Code *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={shippingAddress.zipCode}
+                              onChange={(e) => setShippingAddress({...shippingAddress, zipCode: e.target.value})}
+                              className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                              placeholder="10001"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                              Country *
+                            </label>
+                            <select
+                              required
+                              value={shippingAddress.country}
+                              onChange={(e) => setShippingAddress({...shippingAddress, country: e.target.value})}
+                              className="w-full px-4 py-3 rounded-lg border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 text-surface-900 dark:text-surface-100"
+                            >
+                              <option value="United States">United States</option>
+                              <option value="Canada">Canada</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Shipping Method */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
+                          Shipping Method
+                        </h3>
+                        
+                        <div className="space-y-3">
+                          {[
+                            { id: 'standard', name: 'Standard Shipping', time: '5-7 business days', cost: subtotal > 50 ? 0 : 9.99 },
+                            { id: 'express', name: 'Express Shipping', time: '2-3 business days', cost: 12.99 },
+                            { id: 'overnight', name: 'Overnight Shipping', time: 'Next business day', cost: 24.99 }
+                          ].map((method) => (
+                            <div key={method.id} className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
+                              shippingMethod === method.id 
+                                ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                                : 'border-surface-300 dark:border-surface-600 hover:border-primary-300'
+                            }`} onClick={() => setShippingMethod(method.id)}>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <input
+                                    type="radio"
+                                    name="shippingMethod"
+                                    value={method.id}
+                                    checked={shippingMethod === method.id}
+                                    onChange={(e) => setShippingMethod(e.target.value)}
+                                    className="text-primary-600"
+                                  />
+                                  <div>
+                                    <p className="font-medium text-surface-900 dark:text-surface-100">{method.name}</p>
+                                    <p className="text-sm text-surface-600 dark:text-surface-400">{method.time}</p>
+                                  </div>
+                                </div>
+                                <span className="font-semibold text-surface-900 dark:text-surface-100">
+                                  {method.cost === 0 ? 'FREE' : `$${method.cost.toFixed(2)}`}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="flex space-x-4">
+                        <button
+                          type="button"
+                          onClick={() => setCurrentStep(1)}
+                          className="flex-1 py-3 border border-surface-300 dark:border-surface-600 text-surface-700 dark:text-surface-300 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors font-medium"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="submit"
+                          className="flex-1 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                        >
+                          Continue to Payment
+                        </button>
+                      </div>
+                    </form>
+                  )}
+
                   {/* Additional steps would be implemented here with similar structure */}
-                  {currentStep > 1 && (
+                  {currentStep > 2 && (
                     <div className="text-center py-8">
                       <h2 className="text-xl font-bold text-surface-900 dark:text-surface-100 mb-4">
                         Step {currentStep} Content
