@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
@@ -81,9 +82,12 @@ const Home = () => {
                 Experience the future of e-commerce with intelligent product discovery, personalized recommendations, and seamless checkout.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="px-8 py-3 bg-gradient-to-r from-primary-600 to-secondary-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                <Link 
+                  to="/products"
+                  className="inline-block px-8 py-3 bg-gradient-to-r from-primary-600 to-secondary-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 text-center"
+                >
                   Start Shopping
-                </button>
+                </Link>
                 <button className="px-8 py-3 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-100 font-semibold rounded-xl border-2 border-surface-200 dark:border-surface-700 hover:border-primary-300 dark:hover:border-primary-600 transition-all duration-300">
                   Browse Categories
                 </button>
