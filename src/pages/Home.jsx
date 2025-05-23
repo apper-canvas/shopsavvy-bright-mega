@@ -42,13 +42,6 @@ const Home = () => {
             >
               <ApperIcon name={darkMode ? "Sun" : "Moon"} className="h-5 w-5" />
             </button>
-            
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-surface-100 text-surface-600 transition-all hover:bg-surface-200 hover:text-surface-800 dark:bg-surface-800 dark:text-surface-400 dark:hover:bg-surface-700 dark:hover:text-surface-200 relative">
-              <ApperIcon name="ShoppingCart" className="h-5 w-5" />
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white">
-                3
-              </span>
-            </button>
 
             <button className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl bg-surface-100 text-surface-600 transition-all hover:bg-surface-200 hover:text-surface-800 dark:bg-surface-800 dark:text-surface-400 dark:hover:bg-surface-700 dark:hover:text-surface-200">
               <ApperIcon name="Menu" className="h-5 w-5" />
