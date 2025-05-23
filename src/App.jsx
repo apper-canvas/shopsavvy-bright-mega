@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { CartProvider } from './contexts/CartContext'
 import { DealsProvider } from './contexts/DealsContext'
 import Deals from './pages/Deals'
+import { DealsProvider } from './contexts/DealsContext'
+import Deals from './pages/Deals'
 import Home from './pages/Home'
 import Categories from './pages/Categories'
 import CategoryView from './pages/CategoryView'
@@ -19,6 +21,8 @@ function App() {
             <Route path="/deals" element={<Deals />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/category/:categoryId" element={<CategoryView />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
             <Route path="*" element={<NotFound />} />
           </Routes>
         
@@ -39,6 +43,7 @@ function App() {
           progressClassName="!bg-gradient-to-r !from-primary-500 !to-secondary-500"
         />
       </div>
+      </DealsProvider>
       </DealsProvider>
     </CartProvider>
   )
