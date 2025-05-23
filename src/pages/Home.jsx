@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
 import Header from '../components/Header'
