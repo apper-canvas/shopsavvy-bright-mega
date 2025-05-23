@@ -1,13 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrackingContext } from '../contexts/TrackingContext';
+import { useTracking } from '../contexts/TrackingContext';
 import Header from '../components/Header';
 import { Search, Package, MapPin, Clock, CheckCircle, Truck, Home } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function Tracking() {
   const navigate = useNavigate();
-  const { trackings, getTrackingByNumber } = useContext(TrackingContext);
+  const { orders, getOrderByTrackingNumber } = useTracking();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTracking, setSelectedTracking] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -21,7 +21,7 @@ function Tracking() {
 
     setIsSearching(true);
     try {
-      const tracking = getTrackingByNumber(searchQuery.trim());
+      const tracking = getOrderByTrackingNumber(searchQuery.trim());
       if (tracking) {
         setSelectedTracking(tracking);
         toast.success('Tracking information found');
@@ -129,7 +129,7 @@ function Tracking() {
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <h3 className="font-medium text-surface-900 dark:text-white mb-2">Order Information</h3>
-                  <p className="text-surface-600 dark:text-surface-300">Order #{selectedTracking.orderId}</p>
+                  <p className="text-surface-600 dark:text-surface-300">Order #{selectedTracking.orderNumber}</p>
                   <p className="text-surface-600 dark:text-surface-300">
                     Estimated Delivery: {selectedTracking.estimatedDelivery}
                   </p>
@@ -137,7 +137,7 @@ function Tracking() {
                 <div>
                   <h3 className="font-medium text-surface-900 dark:text-white mb-2">Shipping Address</h3>
                   <p className="text-surface-600 dark:text-surface-300">
-                    {selectedTracking.shippingAddress}
+                    {selectedTracking.shippingAddress?.street}, {selectedTracking.shippingAddress?.city}, {selectedTracking.shippingAddress?.state} {selectedTracking.shippingAddress?.zipCode}
                   </p>
                 </div>
               </div>
@@ -154,7 +154,7 @@ function Tracking() {
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <h4 className="font-medium text-surface-900 dark:text-white">
-                            {event.description}
+                            {event.title}
                           </h4>
                           <span className="text-sm text-surface-500 dark:text-surface-400">
                             {event.timestamp}
@@ -162,7 +162,7 @@ function Tracking() {
                         </div>
                         {event.location && (
                           <p className="text-surface-600 dark:text-surface-300 text-sm">
-                            {event.location}
+                            📍 {event.location}
                           </p>
                         )}
                       </div>

@@ -217,4 +217,4 @@ export const TrackingProvider = ({ children }) => {
   )
 }
 
-export default TrackingProvider
+export { TrackingContext, TrackingProvider as default }
